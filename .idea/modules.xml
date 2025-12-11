@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/ProjectTrafficSimulator.iml" filepath="$PROJECT_DIR$/.idea/ProjectTrafficSimulator.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/TrafficOptimizationProject.iml" filepath="$PROJECT_DIR$/.idea/TrafficOptimizationProject.iml" />
     </modules>
   </component>
 </project>
