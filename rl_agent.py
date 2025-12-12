@@ -7,7 +7,7 @@ class RLLightAgent:
         self.Q = {}             # Q-table: Q[state][action]
         self.alpha = 0.1        # learning rate
         self.gamma = 0.9        # discount factor
-        self.epsilon = 0.2      # exploration chance
+        self.epsilon = 0.05      # exploration chance
 
     def get_Q(self, state):
         if state not in self.Q:
