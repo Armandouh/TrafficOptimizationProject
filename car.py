@@ -6,7 +6,7 @@ from utils import world_center
 from pathfinding import bfs_find_path, tile_path_to_lane_points
 
 
-# ============================================================
+# ================================= ===========================
 # Line intersection helper (needed by raycast)
 # ============================================================
 def lines_intersect(x1, y1, x2, y2, x3, y3, x4, y4):
@@ -38,6 +38,14 @@ def raycast_to_rect(x1, y1, x2, y2, rect):
 
 
 class Car:
+    def get_rect(self):
+        # axis-aligned rect is enough for collision event detection
+        return pygame.Rect(
+            int(self.x - self.width // 2),
+            int(self.y - self.height // 2),
+            int(self.width),
+            int(self.height),
+        )
     def __init__(self, start_tile, goal_tile, color, traffic_lights):
         self.start_tile = start_tile
         self.goal_tile = goal_tile
@@ -51,8 +59,8 @@ class Car:
         self.block_gap = 55
         self.release_gap = 70
 
-        self.width = 36
-        self.height = 18
+        self.width = 18
+        self.height = 9
 
         self.max_speed = 110.0
         self.speed = self.max_speed * 0.5
@@ -74,7 +82,14 @@ class Car:
         # Path
         tile_path = bfs_find_path(start_tile, goal_tile, ROAD_MAP)
         self.tile_path = tile_path
-        self.path = tile_path_to_lane_points(tile_path)
+
+        self.lane_index = 0
+        if tile_path:
+            sx, sy = tile_path[0]
+            if ROAD_MAP[sy][sx] == -10:  # 2-lane tile
+                self.lane_index = random.randint(0, 1)
+
+        self.path = tile_path_to_lane_points(tile_path, lane_index=self.lane_index)
 
         if len(tile_path) > 1:
             self.x, self.y, self.angle = self.compute_spawn(tile_path[0], tile_path[1])
@@ -93,11 +108,12 @@ class Car:
     # ------------------------------------------------------------
     def _randomize_appearance_and_physics(self):
         car_types = [
-            {"name": "compact", "w": (30, 38), "h": (15, 18), "speed": (105, 125)},
-            {"name": "sedan",   "w": (38, 48), "h": (16, 20), "speed": (100, 118)},
-            {"name": "suv",     "w": (45, 58), "h": (18, 24), "speed": (95, 112)},
-            {"name": "van",     "w": (55, 72), "h": (20, 28), "speed": (85, 102)},
+            {"name": "compact", "w": (21, 27), "h": (12, 15), "speed": (95, 105)},
+            {"name": "sedan", "w": (24, 30), "h": (12, 15), "speed": (90, 100)},
+            {"name": "suv", "w": (27, 33), "h": (15, 18), "speed": (85, 95)},
+            {"name": "van", "w": (30, 36), "h": (15, 18), "speed": (78, 88)},
         ]
+
         t = random.choice(car_types)
         self.car_type = t["name"]
 
@@ -208,6 +224,10 @@ class Car:
         angles = [desired_heading,
                   desired_heading - RAY_ANGLE_SPREAD,
                   desired_heading + RAY_ANGLE_SPREAD]
+
+
+
+
 
         for ang in angles:
             ray_end_x = self.x + math.cos(math.radians(ang)) * RAY_LENGTH

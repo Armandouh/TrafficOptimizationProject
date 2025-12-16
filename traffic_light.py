@@ -27,15 +27,25 @@ class TrafficLight:
         pass  # RL fully controls switching
 
     # RL action handler
-    def update_with_rl(self, action):
+    def update_with_rl(self, action, min_hold=8):
         self.prev_green = self.green
 
-        if action == "switch":
+        if action == "switch" and self.time_since_switch >= min_hold:
             self.green = not self.green
             self.time_since_switch = 0
         else:
-            self.time_since_switch += 1  # RL step counter
+            self.time_since_switch += 1
 
+    def reset(self, start_green=None):
+        if start_green is None:
+            start_green = self.green
+        self.green = start_green
+        self.prev_green = self.green
+        self.time_since_switch = 0
+        if hasattr(self, "total_reward"):
+            self.total_reward = 0
+        self.debug_info = None
+        self.penalties = None
     def car_can_pass(self, car, car_dx, car_dy):
         if car.control_light is not self:
             return True

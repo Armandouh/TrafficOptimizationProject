@@ -23,10 +23,10 @@ PORTALS = collect_portals(ROAD_MAP)
 
 # Create traffic lights (same configuration as original script)
 TRAFFIC_LIGHTS = [
-    #TrafficLight((2,2), light_id=7, start_green=True),
-    TrafficLight((2,4), light_id=7, start_green=True),
-    #TrafficLight((1,3), light_id=7, start_green=False),
-    #TrafficLight((3,3), light_id=7, start_green=False),
+    TrafficLight((1,0.5), light_id=7, start_green=True),
+    TrafficLight((1,4), light_id=7, start_green=True),
+    TrafficLight((0.5,3), light_id=7, start_green=False),
+    TrafficLight((3,2.5), light_id=7, start_green=False),
 ]
 
 # Assign controlled tiles
